@@ -143,9 +143,8 @@ npm install
 # 3. 登录 Cloudflare（首次需要）
 npx wrangler login
 
-# 4. 部署（二选一）
-npm run pages:deploy    # Cloudflare Pages 方式
-npm run workers:deploy  # Cloudflare Workers 方式
+# 4. 部署
+npm run deploy
 ```
 
 部署成功后会得到你自己的 Worker 地址（如 `https://wloc-spoofer.<你的子域名>.workers.dev`），用这个地址选点即可。
