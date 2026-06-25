@@ -59,11 +59,25 @@ body { font-family:-apple-system,system-ui,"SF Pro","Helvetica Neue",sans-serif;
 .modal input:focus { border-color:var(--blue); }
 .modal .modal-btns { display:flex; gap:8px; }
 .modal .modal-btns .btn { padding:12px; }
-@media(max-width:480px) { #map { height:44vh; } .panel { padding:12px; } }
+.layer-switch { position:absolute; top:10px; right:10px; z-index:1000; display:flex; gap:4px; background:rgba(255,255,255,.92); border-radius:8px; padding:4px; box-shadow:0 2px 8px rgba(0,0,0,.15); }
+.layer-btn { border:none; background:transparent; padding:6px 10px; border-radius:6px; font-size:12px; font-weight:500; color:#333; cursor:pointer; transition:all .15s; white-space:nowrap; }
+.layer-btn.active { background:var(--blue); color:#fff; }
+.layer-btn:active { transform:scale(.95); }
+@media(max-width:480px) { #map { height:44vh; } .panel { padding:12px; } .layer-btn { padding:5px 7px; font-size:11px; } }
 </style>
 </head>
 <body>
+<div style="position:relative">
 <div id="map"></div>
+<div class="layer-switch">
+  <button class="layer-btn active" data-layer="satellite" onclick="switchLayer('satellite')">卫星</button>
+  <button class="layer-btn" data-layer="wgs84" onclick="switchLayer('wgs84')">WGS84</button>
+  <button class="layer-btn" data-layer="amap" onclick="switchLayer('amap')">高德</button>
+  <button class="layer-btn" data-layer="voyager" onclick="switchLayer('voyager')">彩色</button>
+  <button class="layer-btn" data-layer="standard" onclick="switchLayer('standard')">标准</button>
+  <button class="layer-btn" data-layer="dark" onclick="switchLayer('dark')">暗色</button>
+</div>
+</div>
 <div class="panel">
   <div class="error-banner" id="errorBanner">
     <b>模块未生效</b>
@@ -137,9 +151,22 @@ let selected = false;
 let activeLon = null, activeLat = null;
 
 const map = L.map('map').setView([lat, lon], 13);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 19, attribution: '\\u00a9 OSM'
-}).addTo(map);
+const tiles = {
+  satellite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {maxZoom:19, attribution:'ArcGIS'}),
+  wgs84: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {maxZoom:19, attribution:'ArcGIS WGS84'}),
+  standard: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom:19, attribution:'\\u00a9 OSM'}),
+  dark: L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {maxZoom:19, attribution:'\\u00a9 Carto'}),
+  amap: L.tileLayer('https://webst0{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}', {maxZoom:18, subdomains:'1234', attribution:'\\u00a9 高德'}),
+  voyager: L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {maxZoom:19, attribution:'\\u00a9 Carto'})
+};
+let currentLayer = tiles.satellite;
+currentLayer.addTo(map);
+function switchLayer(name) {
+  map.removeLayer(currentLayer);
+  currentLayer = tiles[name];
+  currentLayer.addTo(map);
+  document.querySelectorAll('.layer-btn').forEach(b => b.classList.toggle('active', b.dataset.layer === name));
+}
 let marker = L.marker([lat, lon], {draggable:true}).addTo(map);
 
 marker.on('dragend', e => { const p=e.target.getLatLng(); setPos(p.lat, p.lng); });

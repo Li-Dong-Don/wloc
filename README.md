@@ -74,8 +74,8 @@ https://raw.githubusercontent.com/Yu9191/wloc/refs/heads/main/modules/wloc.lpx
 
 | 参数 | 说明 | 默认值 |
 |------|------|--------|
-| longitude | 目标经度(在线选点优先) | 113.94114 |
-| latitude | 目标纬度(在线选点优先) | 22.544577 |
+| longitude | 目标经度(在线选点优先) | null (透传) |
+| latitude | 目标纬度(在线选点优先) | null (透传) |
 | accuracy | 精度(米) | 25 |
 | logLevel | 日志级别 | info |
 
@@ -90,15 +90,17 @@ https://raw.githubusercontent.com/Yu9191/wloc/refs/heads/main/modules/wloc.lpx
 
 关闭模块后脚本不再拦截 WLOC 请求，系统自动恢复真实定位。iOS 26+ 需要重启设备清除定位缓存。
 
-**方法二：仅清除已保存的坐标**
+**方法二：清除持久化数据（透传模式）**
 
-如果想保留模块但清除在线选点写入的坐标（回退到模块参数或默认值），需要在代理工具中删除持久化数据，字段名为 `wloc_settings`：
+清除已保存的坐标后，脚本进入**透传模式**——不修改 WLOC 响应，直接放行原始数据，系统自动恢复真实 GPS 定位。
+
+在代理工具中删除持久化数据，字段名为 `wloc_settings`：
 
 - **Surge** — 脚本编辑器运行: `$persistentStore.write(null, "wloc_settings")`
 - **Quantumult X** — 运行: `$prefs.removeValueForKey("wloc_settings")`
 - **Loon** — 运行: `$persistentStore.write(null, "wloc_settings")`
 
-清除后重启设备即可生效。
+清除后重启设备即可恢复真实定位。无需关闭模块，脚本会自动检测到无坐标数据并跳过修改。
 
 </details>
 
