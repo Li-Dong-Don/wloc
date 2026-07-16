@@ -2,9 +2,9 @@
   <img src="wloc.jpg" width="144" />
 </p>
 
-# Apple WLOC 定位修改
+# WLOC 定位修改 (Apple/腾讯地图)
 
-修改 Apple 网络定位服务 (WiFi/基站) 返回的坐标，实现 iOS 网络定位虚拟定位。打开在线选点页面选位置即可生效，无需手动填经纬度。
+修改 Apple 网络定位服务 (WiFi/基站) 返回的坐标，并重写腾讯地图逆地理编码请求。打开在线选点页面选位置即可生效，无需手动填经纬度。
 
 ---
 
@@ -106,9 +106,12 @@ https://raw.githubusercontent.com/Yu9191/wloc/refs/heads/main/modules/wloc.modul
          → 下次 WLOC 触发 → wloc.js 读取坐标 → patch protobuf 响应
 ```
 
-模块包含两条规则：
+模块包含三条规则：
 - `wloc.js` — 拦截 `/clls/wloc` 响应，解析 protobuf 并替换坐标
+- `tencent-geocoder.js` — 拦截腾讯地图 `/ws/geocoder/v1` 请求，将 `location=纬度,经度` 替换为已保存位置
 - `wloc-settings.js` — 拦截 `/wloc-settings/save` 请求，写入持久化存储
+
+腾讯地图接口使用 GCJ-02 坐标。选点页面保存的是 WGS-84，脚本会在中国大陆范围内自动执行 WGS-84 → GCJ-02 转换；境外坐标保持不变。脚本只替换请求原有的 `location` 参数，商户 `key`、其他查询参数和请求头均保持不变。未保存坐标时，腾讯请求会直接透传。
 
 </details>
 
@@ -228,7 +231,7 @@ Pages 和 Workers 功能完全一致，按需选择即可。
 <details>
 <summary><b>注意事项</b></summary>
 
-- 需要 MITM 证书信任 `gs-loc.apple.com` 和 `gs-loc-cn.apple.com`
+- 需要 MITM 证书信任 `gs-loc.apple.com`、`gs-loc-cn.apple.com` 和 `apis.map.qq.com`
 - 仅修改网络定位(WiFi/基站)，不影响 GPS 硬件定位
 - iOS 在 GPS 信号强时可能忽略网络定位结果
 - 适用于 WiFi 定位为主的室内场景效果最佳
