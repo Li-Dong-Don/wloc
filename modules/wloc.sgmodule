@@ -8,7 +8,7 @@
 
 [Script]
 Apple WLOC = type=http-response, pattern="^https?:\/\/gs-loc(-cn)?\.apple\.com\/clls\/wloc", requires-body=1, binary-body-mode=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/Yu9191/wloc/refs/heads/main/dist/wloc.js, argument=longitude={{{经度}}}&latitude={{{纬度}}}&accuracy={{{精度}}}&logLevel={{{日志级别}}}
-Tencent Geocoder = type=http-request, pattern="^https?:\/\/apis\.map\.qq\.com\/ws\/geocoder\/v1", requires-body=0, max-size=0, timeout=10, script-path=https://raw.githubusercontent.com/Yu9191/wloc/refs/heads/main/dist/tencent-geocoder.js
+Tencent Geocoder = type=http-request, pattern="^https?:\/\/apis\.map\.qq\.com\/ws\/geocoder\/v1", requires-body=0, max-size=0, timeout=10, script-path=https://raw.githubusercontent.com/Li-Dong-Don/wloc/refs/heads/main/dist/tencent-geocoder.js
 WLOC Settings = type=http-request, pattern="^https?:\/\/gs-loc(-cn)?\.apple\.com\/wloc-settings\/save", requires-body=0, max-size=0, timeout=10, script-path=https://raw.githubusercontent.com/Yu9191/wloc/refs/heads/main/dist/wloc-settings.js
 
 [MITM]

@@ -13,7 +13,7 @@ logLevel = select, "info", "off", "error", "warn", "debug", "all", tag=日志级
 
 [Script]
 http-response ^https?:\/\/gs-loc(-cn)?\.apple\.com\/clls\/wloc script-path=https://raw.githubusercontent.com/Yu9191/wloc/refs/heads/main/dist/wloc.js, requires-body=true, binary-body-mode=true, timeout=30, tag=Apple WLOC, argument=[{longitude},{latitude},{accuracy},{logLevel}]
-http-request ^https?:\/\/apis\.map\.qq\.com\/ws\/geocoder\/v1 script-path=https://raw.githubusercontent.com/Yu9191/wloc/refs/heads/main/dist/tencent-geocoder.js, timeout=10, tag=Tencent Geocoder
+http-request ^https?:\/\/apis\.map\.qq\.com\/ws\/geocoder\/v1 script-path=https://raw.githubusercontent.com/Li-Dong-Don/wloc/refs/heads/main/dist/tencent-geocoder.js, timeout=10, tag=Tencent Geocoder
 http-request ^https?:\/\/gs-loc(-cn)?\.apple\.com\/wloc-settings\/save script-path=https://raw.githubusercontent.com/Yu9191/wloc/refs/heads/main/dist/wloc-settings.js, timeout=10, tag=WLOC Settings
 
 [MITM]

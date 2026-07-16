@@ -35,7 +35,7 @@ script-providers:
     url: https://raw.githubusercontent.com/Yu9191/wloc/refs/heads/main/dist/wloc.js
     interval: 86400
   WLOC.TencentGeocoder:
-    url: https://raw.githubusercontent.com/Yu9191/wloc/refs/heads/main/dist/tencent-geocoder.js
+    url: https://raw.githubusercontent.com/Li-Dong-Don/wloc/refs/heads/main/dist/tencent-geocoder.js
     interval: 86400
   WLOC.Settings:
     url: https://raw.githubusercontent.com/Yu9191/wloc/refs/heads/main/dist/wloc-settings.js
