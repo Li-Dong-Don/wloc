@@ -4,7 +4,7 @@
 
 # Apple WLOC 定位修改
 
-修改 Apple 网络定位服务 (WiFi/基站) 返回的坐标，实现 iOS 网络定位虚拟定位。打开在线选点页面选位置即可生效，无需手动填经纬度。
+修改 Apple 网络定位服务 (WiFi/基站) 返回的坐标，实现 iOS 网络定位虚拟定位；同时将腾讯地图逆地理编码请求同步到目标坐标。打开在线选点页面选位置即可生效，无需手动填经纬度。
 
 ---
 
@@ -106,9 +106,10 @@ https://raw.githubusercontent.com/Yu9191/wloc/refs/heads/main/modules/wloc.modul
          → 下次 WLOC 触发 → wloc.js 读取坐标 → patch protobuf 响应
 ```
 
-模块包含两条规则：
+模块包含三条规则：
 - `wloc.js` — 拦截 `/clls/wloc` 响应，解析 protobuf 并替换坐标
 - `wloc-settings.js` — 拦截 `/wloc-settings/save` 请求，写入持久化存储
+- `tencent-map.js` — 拦截腾讯地图 `/ws/geocoder/v1` 请求，将逆地理编码坐标替换为当前 WLOC 坐标，并自动执行 WGS84→GCJ-02 换算
 
 </details>
 
@@ -228,7 +229,7 @@ Pages 和 Workers 功能完全一致，按需选择即可。
 <details>
 <summary><b>注意事项</b></summary>
 
-- 需要 MITM 证书信任 `gs-loc.apple.com` 和 `gs-loc-cn.apple.com`
+- 需要 MITM 证书信任 `gs-loc.apple.com`、`gs-loc-cn.apple.com` 和 `apis.map.qq.com`
 - 仅修改网络定位(WiFi/基站)，不影响 GPS 硬件定位
 - iOS 在 GPS 信号强时可能忽略网络定位结果
 - 适用于 WiFi 定位为主的室内场景效果最佳
